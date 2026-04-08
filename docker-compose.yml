@@ -1,0 +1,11 @@
+services:
+  ielts:
+    build:
+      context: .
+      dockerfile: ./DockerFile
+    environment:
+      NODE_ENV: development
+    ports:
+      - 7700:3000
+
+

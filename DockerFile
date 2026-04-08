@@ -1,0 +1,26 @@
+# FROM node:18-alpine AS builder
+FROM node:22-alpine AS builder
+
+
+# Set working directory inside the container
+WORKDIR /app
+
+# Copy package.json, yarn.lock (if exists), and other necessary files
+COPY package.json ./
+
+# Install Yarn globally
+
+# Install dependencies using Yarn
+
+
+# Copy the rest of the application code
+COPY . .
+RUN npm install
+# Build your application (if necessary)
+RUN npm run build
+
+# Expose port app runs on
+EXPOSE 3000
+
+# Command to run the app
+CMD ["npm", "start"]
