@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { authServices } from "@/domain/services/authService";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-
 
 const handler = NextAuth({
   providers: [
@@ -13,23 +13,27 @@ const handler = NextAuth({
       },
       async authorize(credentials) {
         if (!credentials) return null;
-        
-        const data = await authServices.login({
-          username: credentials.username,
-          password: credentials.password,
-        });
 
-        if (!data) return null;
+        try {
+          const data = await authServices.login({
+            username: credentials.username,
+            password: credentials.password,
+          });
 
-        const role = data?.user?.is_staff ? "owner" : "customer";
-        return {
-          id: data?.user.id,
-          name: data?.user.username,
-          email: data?.user.email,
-          token: data?.token,
-          phone: data?.user.phone,
-          role,
-        };
+          if (!data?.token) return null;
+
+          const role = data.user?.is_staff ? "owner" : "customer";
+          return {
+            id: String(data.user.id),
+            name: data.user.username,
+            email: data.user.email ?? "",
+            token: data.token,
+            phone: data.user.phone ?? "",
+            role,
+          } as any;
+        } catch {
+          return null;
+        }
       },
     }),
   ],
@@ -41,12 +45,12 @@ const handler = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.accessToken = user.token;
-        token.role = user.role;
-        token.username = user.name;
-        token.userId = user.id;
-        token.email = user.email;
-        token.phone  = user.phone
+        token.accessToken = (user as any).token;
+        token.role = (user as any).role;
+        token.username = user.name ?? "";
+        token.userId = String(user.id);
+        token.email = user.email ?? "";
+        token.phone = (user as any).phone ?? "";
       }
       return token;
     },
@@ -57,19 +61,19 @@ const handler = NextAuth({
       }
       session.user.name = token.username as string;
       session.user.email = token.email as string;
-      session.user.role = token.role as "owner" | "customer";
-      session.user.id = token.userId as string;
-      session.user.phone = token.phone as string;
-      session.accessToken = token.accessToken as string;
+      (session.user as any).role = token.role as string;
+      (session.user as any).id = token.userId as string;
+      (session.user as any).phone = token.phone as string;
+      (session as any).accessToken = token.accessToken as string;
       return session;
     },
   },
 
   secret: process.env.NEXTAUTH_SECRET,
 
-  pages:{
-    signIn:"/login"
-  }
+  pages: {
+    signIn: "/login",
+  },
 });
 
 export { handler as GET, handler as POST };
