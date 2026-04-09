@@ -218,7 +218,7 @@ export default function DashboardProductsPage() {
                           {p.name}
                         </div>
                         <div className="line-clamp-1 text-xs text-muted-foreground">
-                          {p.material || p.color || "—"}
+                          {p.material || p.colors?.join(", ") || "—"}
                           {p.variants.length > 0 && (
                             <> · {p.variants.slice(0, 3).join(", ")}{p.variants.length > 3 ? "…" : ""}</>
                           )}
