@@ -239,7 +239,7 @@ The Django backend lives in `../backend/`. It uses:
 - Routers under [config/api_router.py](../backend/config/api_router.py)
 - Custom user at [backend/users/models.py](../backend/backend/users/models.py)
 
-When the backend doesn't yet expose an endpoint, **stop and tell the user** instead of mocking — the user will add the DRF viewset. The expected URL convention is `/<app>/<resource>/`, e.g. `/products/products/`, `/orders/orders/`, `/cart/items/`.
+When a frontend feature needs an endpoint that doesn't exist on the backend yet, **build it on the backend in the same change**. Don't mock, don't stop — implement the model, serializer, viewset, and URL registration in `../backend/`, then wire the frontend `apiRepository` against it. See [../backend/CLAUDE.md](../backend/CLAUDE.md) for backend conventions. The URL convention is `/api/<app>/<resource>/`, e.g. `/api/catalog/products/`, `/api/orders/orders/`, `/api/expenses/expenses/`.
 
 Standard list response shape (see [apiResponse.ts](src/domain/interfaces/apiResponse.ts)):
 ```ts

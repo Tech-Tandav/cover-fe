@@ -1,7 +1,10 @@
-export interface IResponseApi<T> {
-    count : number,
-    current_page : number,
-    page_size : number,
-    total_pages : number,
-    results : T,
+// DRF default PageNumberPagination shape.
+export interface IPaginatedApi<T> {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: T;
 }
+
+// Backwards-compatible alias.
+export type IResponseApi<T> = IPaginatedApi<T>;

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/components/custom/AuthProvider";
+import { CartProvider } from "@/lib/cart/CartContext";
 import { Toaster } from "sonner";
 import { Suspense } from "react";
 
@@ -16,28 +17,19 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  manifest:"/manifest.json",
-  title: "Template",
-  description: "Template",
-  generator: "v0.app",
+  manifest: "/manifest.json",
+  title: "E‑Store and Accessories | Pokhara, Nepal",
+  description:
+    "Premium mobile covers, screen protectors, chargers and audio gear in Pokhara, Naya Bazaar.",
   icons: {
     icon: [
-      {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
-      },
+      { url: "/icon-light-32x32.png", media: "(prefers-color-scheme: light)" },
+      { url: "/icon-dark-32x32.png", media: "(prefers-color-scheme: dark)" },
+      { url: "/icon.svg", type: "image/svg+xml" },
     ],
     apple: "/apple-icon.png",
   },
-}
+};
 
 export default function RootLayout({
   children,
@@ -45,14 +37,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Suspense fallback={<p>Loading....</p>}>
+        <Suspense fallback={null}>
           <AuthProvider>
-            {children}
-            <Toaster/>
+            <CartProvider>
+              {children}
+              <Toaster richColors position="top-right" />
+            </CartProvider>
           </AuthProvider>
         </Suspense>
       </body>
