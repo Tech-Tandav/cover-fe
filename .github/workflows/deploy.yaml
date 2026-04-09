@@ -21,7 +21,7 @@ jobs :
           key : ${{ secrets.SSH_KEY }} 
           port: 4096
           script: |
-            cd /home/ubuntu/projects/khelkud/futsal-fe
+            cd /home/ubuntu/projects/cover/cover-fe
             git pull
             docker compose -f docker-compose.yml up -d --build --force-recreate
 
