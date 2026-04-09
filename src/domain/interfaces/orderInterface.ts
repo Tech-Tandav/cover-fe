@@ -6,6 +6,8 @@ export interface IOrderItemApi {
   product_id: number | string;
   product_name: string;
   product_image: string;
+  variant_color: string;
+  variant_size: string;
   unit_price: number | string;
   quantity: number;
   subtotal: number | string;
@@ -34,6 +36,8 @@ export interface IOrderItem {
   productId: string;
   productName: string;
   productImage: string;
+  variantColor: string;
+  variantSize: string;
   unitPrice: number;
   quantity: number;
   subtotal: number;

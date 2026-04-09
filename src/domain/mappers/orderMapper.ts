@@ -15,6 +15,8 @@ const mapOrderItem = (api: IOrderItemApi): IOrderItem => ({
   productId: String(api.product_id),
   productName: api.product_name,
   productImage: api.product_image,
+  variantColor: api.variant_color ?? "",
+  variantSize: api.variant_size ?? "",
   unitPrice: toNum(api.unit_price),
   quantity: api.quantity,
   subtotal: toNum(api.subtotal),

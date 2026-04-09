@@ -11,7 +11,8 @@ export interface IOrderCreatePayload {
   payment_method: "cod" | "esewa" | "khalti" | "bank";
   items: {
     product_id: string | number;
-    sku_id: string | number | null;
+    color: string;
+    size: string;
     quantity: number;
   }[];
 }
