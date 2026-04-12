@@ -18,7 +18,7 @@ import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginSchema, TLoginSchema } from "@/domain/schema/LoginSchema";
-import { signIn } from "next-auth/react";
+
 import {
   ArrowLeft,
   Eye,
@@ -46,22 +46,36 @@ export default function Login() {
   });
 
   const onSubmit = async (data: TLoginSchema) => {
-    const res = await signIn("credentials", {
-      username: data.username,
-      password: data.password,
-      redirect: false,
-      callbackUrl: redirect,
-    });
-    if (!res) {
-      toast.error("Something went wrong");
-      return;
+    try {
+      // Fetch CSRF token — the response sets the csrf cookie automatically
+      const csrfRes = await fetch("/api/auth/csrf");
+      const { csrfToken } = await csrfRes.json();
+
+      // Post directly to the credentials callback with the CSRF token
+      const res = await fetch("/api/auth/callback/credentials", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          username: data.username,
+          password: data.password,
+          csrfToken,
+          callbackUrl: redirect,
+          json: "true",
+        }),
+      });
+
+      const result = await res.json();
+
+      if (result?.url && !result.url.includes("error")) {
+        toast.success("Logged in successfully");
+        router.push(redirect);
+        router.refresh();
+      } else {
+        toast.error("Invalid username or password");
+      }
+    } catch {
+      toast.error("Something went wrong. Please try again.");
     }
-    if (res.error) {
-      toast.error(res.error);
-      return;
-    }
-    toast.success("Logged in successfully");
-    router.push(redirect);
   };
 
   return (

@@ -31,7 +31,8 @@ const handler = NextAuth({
             phone: data.user.phone ?? "",
             role,
           } as any;
-        } catch {
+        } catch (error) {
+          console.error("NextAuth authorize error:", error);
           return null;
         }
       },
@@ -73,6 +74,7 @@ const handler = NextAuth({
 
   pages: {
     signIn: "/login",
+    error: "/login",
   },
 });
 
